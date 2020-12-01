@@ -31,7 +31,7 @@ namespace GameStore.WebUI.Infrastructure
 
         private void AddBindings()
         {
-            kernel.Bind<IGameRepository>().To<EFGameRepository>();
+            this.kernel.Bind<IGameRepository>().To<EFGameRepository>();
         }
     }
 }
