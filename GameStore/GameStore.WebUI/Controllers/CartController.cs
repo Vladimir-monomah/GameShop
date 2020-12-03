@@ -8,54 +8,48 @@ namespace GameStore.WebUI.Controllers
 {
     public class CartController : Controller
     {
-        public ViewResult Index(string returnUrl)
-        {
-            return this.View(new CartIndexViewModel
-            {
-                Cart = GetCart(),
-                ReturnUrl = returnUrl
-            });
-        }
-
         private IGameRepository repository;
         public CartController(IGameRepository repo)
         {
             this.repository = repo;
         }
 
-        public RedirectToRouteResult AddToCart(int gameId, string returnUrl)
+        public ViewResult Index(Cart cart, string returnUrl)
+        {
+            return this.View(new CartIndexViewModel
+            {
+                Cart = cart,
+                ReturnUrl = returnUrl
+            });
+        }
+
+        public RedirectToRouteResult AddToCart(Cart cart, int gameId, string returnUrl)
         {
             Game game = this.repository.Games
                 .FirstOrDefault(g => g.GameId == gameId);
 
             if (game != null)
             {
-                this.GetCart().AddItem(game, 1);
+                cart.AddItem(game, 1);
             }
             return this.RedirectToAction("Index", new { returnUrl });
         }
 
-        public RedirectToRouteResult RemoveFromCart(int gameId, string returnUrl)
+        public RedirectToRouteResult RemoveFromCart(Cart cart, int gameId, string returnUrl)
         {
             Game game = this.repository.Games
                 .FirstOrDefault(g => g.GameId == gameId);
 
             if (game != null)
             {
-                this.GetCart().RemoveLine(game);
+                cart.RemoveLine(game);
             }
             return this.RedirectToAction("Index", new { returnUrl });
         }
 
-        public Cart GetCart()
+        public PartialViewResult Summary(Cart cart)
         {
-            var cart = (Cart)this.Session["Cart"];
-            if (cart == null)
-            {
-                cart = new Cart();
-                this.Session["Cart"] = cart;
-            }
-            return cart;
+            return this.PartialView(cart);
         }
     }
 }
