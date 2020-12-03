@@ -15,20 +15,24 @@ namespace GameStore.WebUI.Controllers
             this.repository = repo;
         }
 
-        public ViewResult List(int page=1)
+        public ViewResult List(string category, int page = 1)
         {
-            GamesListViewModel model = new GamesListViewModel
+            var model = new GamesListViewModel
             {
                 Games = this.repository.Games
-                    .OrderBy(game => game.GameId)
-                    .Skip((page - 1) * this.pageSize)
-                    .Take(this.pageSize),
+            .Where(p => category == null || p.Category == category)
+            .OrderBy(game => game.GameId)
+            .Skip((page - 1) * this.pageSize)
+            .Take(this.pageSize),
                 PagingInfo = new PagingInfo
                 {
                     CurrentPage = page,
                     ItemsPerPage = pageSize,
-                    TotalItems = this.repository.Games.Count()
-                }
+                    TotalItems = category == null ?
+        this.repository.Games.Count() :
+        this.repository.Games.Where(game => game.Category == category).Count()
+                },
+                CurrentCategory = category
             };
             return this.View(model);
         }
