@@ -10,7 +10,7 @@ namespace GameStore.Domain.Concrete
 
         public IEnumerable<Game> Games
         {
-            get { return context.Games; }
+            get { return this.context.Games; }
         }
     }
 }
