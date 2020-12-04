@@ -1,11 +1,10 @@
-﻿using Ninject;
+﻿using GameStore.Domain.Abstract;
+using GameStore.Domain.Concrete;
+using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Web.Mvc;
-using GameStore.Domain.Abstract;
-using GameStore.Domain.Entities;
-using Moq;
-using GameStore.Domain.Concrete;
 
 namespace GameStore.WebUI.Infrastructure
 {
@@ -32,6 +31,15 @@ namespace GameStore.WebUI.Infrastructure
         private void AddBindings()
         {
             this.kernel.Bind<IGameRepository>().To<EFGameRepository>();
+
+            var emailSettings = new EmailSettings
+            {
+                WriteAsFile = bool.Parse(ConfigurationManager
+                    .AppSettings["Email.WriteAsFile"] ?? "false")
+            };
+
+            this.kernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>()
+                .WithConstructorArgument("settings", emailSettings);
         }
     }
 }
