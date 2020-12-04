@@ -22,7 +22,8 @@ namespace GameStore.WebUI.Controllers
                 .Select(game => game.Category)
                 .Distinct()
                 .OrderBy(x => x);
-            return this.PartialView(categories);
+
+            return this.PartialView("FlexMenu", categories);
         }
     }
 }
