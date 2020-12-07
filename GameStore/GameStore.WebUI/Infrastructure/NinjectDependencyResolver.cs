@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Web.Mvc;
+using GameStore.WebUI.Infrastructure.Abstract;
+using GameStore.WebUI.Infrastructure.Concrete;
 
 namespace GameStore.WebUI.Infrastructure
 {
@@ -40,6 +42,8 @@ namespace GameStore.WebUI.Infrastructure
 
             this.kernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>()
                 .WithConstructorArgument("settings", emailSettings);
+
+            this.kernel.Bind<IAuthProvider>().To<FormAuthProvider>();
         }
     }
 }
