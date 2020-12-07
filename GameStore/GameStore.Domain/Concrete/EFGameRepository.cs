@@ -30,5 +30,16 @@ namespace GameStore.Domain.Concrete
             }
             this.context.SaveChanges();
         }
+
+        public Game DeleteGame(int gameId)
+        {
+            Game dbEntry = this.context.Games.Find(gameId);
+            if (dbEntry != null)
+            {
+                this.context.Games.Remove(dbEntry);
+                this.context.SaveChanges();
+            }
+            return dbEntry;
+        }
     }
 }
