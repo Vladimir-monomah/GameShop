@@ -1,4 +1,5 @@
 ﻿using GameStore.Domain.Abstract;
+using GameStore.Domain.Entities;
 using GameStore.WebUI.Models;
 using System.Linq;
 using System.Web.Mvc;
@@ -35,6 +36,21 @@ namespace GameStore.WebUI.Controllers
                 CurrentCategory = category
             };
             return this.View(model);
+        }
+
+        public FileContentResult GetImage(int gameId)
+        {
+            Game game = this.repository.Games
+                .FirstOrDefault(g => g.GameId == gameId);
+
+            if (game != null)
+            {
+                return this.File(game.ImageData, game.ImageMimeType);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
